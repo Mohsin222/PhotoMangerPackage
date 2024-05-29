@@ -1,0 +1,37 @@
+path_provider: ^2.1.3
+
+  import 'package:path/path.dart' as path;
+
+
+Future<void> downloadAssetFile() async {
+  String assetPath = 'assets/Music.zip';
+  String fileName = path.basename(assetPath);
+
+
+  try {
+    // Load the file from assets
+    ByteData data = await rootBundle.load(assetPath);
+
+
+    // Convert ByteData to Uint8List
+    Uint8List bytes = data.buffer.asUint8List();
+
+
+    // Get the download directory
+    Directory? downloadDir = await getExternalStorageDirectory();
+
+
+    // Construct the file path in the download directory
+    String filePath = path.join(downloadDir!.path, fileName);
+
+
+    // Write the file to the download directory
+    File file = File(filePath);
+    await file.writeAsBytes(bytes);
+
+
+    print('File downloaded to: $filePath');
+  } catch (e) {
+    print('Error downloading asset file: $e');
+  }
+}
